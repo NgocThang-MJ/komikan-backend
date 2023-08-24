@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package pb;
+
+import "history.proto";
+import "user.proto";
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/liquiddev99/dropbyte-backend/pb";
+
+service Komikan {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){
+    option (google.api.http) = {
+      post: "/v1/create_user"
+      body: "*"
+    };
+  }
+
+  rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){
+    option (google.api.http) = {
+      post: "/v1/login_user"
+      body: "*"
+    };
+  }
+
+  rpc CreateHistory (CreateHistoryRequest) returns (History){
+    option (google.api.http) = {
+      post: "/v1/create_history"
+      body: "*"
+    };
+  }
+
+  rpc GetHistories (GetHistoriesRequest) returns (HistoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/get_histories"
+    };
+  }
+
+  rpc UpdateHistory (UpdateHistoryRequest) returns (UpdateHistoryResponse){
+    option (google.api.http) = {
+      put: "/v1/update_history"
+      body: "*"
+    };
+  }
+
+  rpc UpsertHistory (CreateHistoryRequest) returns (CreateHistoryResponse){
+    option (google.api.http) = {
+      post: "/v1/upsert_history"
+      body: "*"
+    };
+  }
+}
