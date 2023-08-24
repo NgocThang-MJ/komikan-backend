@@ -24,6 +24,12 @@ service Komikan {
     };
   }
 
+  rpc GetUser (GetUserRequest) returns (UserResponse){
+    option (google.api.http) = {
+      get: "/v1/get_user"
+    };
+  }
+
   rpc CreateHistory (CreateHistoryRequest) returns (History){
     option (google.api.http) = {
       post: "/v1/create_history"

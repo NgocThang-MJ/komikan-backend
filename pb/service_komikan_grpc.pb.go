@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Komikan_CreateUser_FullMethodName    = "/pb.Komikan/CreateUser"
 	Komikan_LoginUser_FullMethodName     = "/pb.Komikan/LoginUser"
+	Komikan_GetUser_FullMethodName       = "/pb.Komikan/GetUser"
 	Komikan_CreateHistory_FullMethodName = "/pb.Komikan/CreateHistory"
 	Komikan_GetHistories_FullMethodName  = "/pb.Komikan/GetHistories"
 	Komikan_UpdateHistory_FullMethodName = "/pb.Komikan/UpdateHistory"
@@ -33,6 +34,7 @@ const (
 type KomikanClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	CreateHistory(ctx context.Context, in *CreateHistoryRequest, opts ...grpc.CallOption) (*History, error)
 	GetHistories(ctx context.Context, in *GetHistoriesRequest, opts ...grpc.CallOption) (*HistoriesResponse, error)
 	UpdateHistory(ctx context.Context, in *UpdateHistoryRequest, opts ...grpc.CallOption) (*UpdateHistoryResponse, error)
@@ -59,6 +61,15 @@ func (c *komikanClient) CreateUser(ctx context.Context, in *CreateUserRequest, o
 func (c *komikanClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	out := new(LoginUserResponse)
 	err := c.cc.Invoke(ctx, Komikan_LoginUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *komikanClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, Komikan_GetUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +118,7 @@ func (c *komikanClient) UpsertHistory(ctx context.Context, in *CreateHistoryRequ
 type KomikanServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*UserResponse, error)
 	CreateHistory(context.Context, *CreateHistoryRequest) (*History, error)
 	GetHistories(context.Context, *GetHistoriesRequest) (*HistoriesResponse, error)
 	UpdateHistory(context.Context, *UpdateHistoryRequest) (*UpdateHistoryResponse, error)
@@ -123,6 +135,9 @@ func (UnimplementedKomikanServer) CreateUser(context.Context, *CreateUserRequest
 }
 func (UnimplementedKomikanServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
+}
+func (UnimplementedKomikanServer) GetUser(context.Context, *GetUserRequest) (*UserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedKomikanServer) CreateHistory(context.Context, *CreateHistoryRequest) (*History, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateHistory not implemented")
@@ -181,6 +196,24 @@ func _Komikan_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KomikanServer).LoginUser(ctx, req.(*LoginUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Komikan_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KomikanServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Komikan_GetUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KomikanServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -271,6 +304,10 @@ var Komikan_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginUser",
 			Handler:    _Komikan_LoginUser_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _Komikan_GetUser_Handler,
 		},
 		{
 			MethodName: "CreateHistory",

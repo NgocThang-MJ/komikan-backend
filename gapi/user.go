@@ -105,3 +105,23 @@ func (server *Server) LoginUser(
 
 	return res, nil
 }
+
+func (server *Server) GetUser(
+	ctx context.Context,
+	req *pb.GetUserRequest,
+) (*pb.UserResponse, error) {
+	payload, err := server.authorizeUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.Unauthenticated,
+			"Failed to authorize user: %s",
+			err.Error(),
+		)
+	}
+
+	user, err := server.db.GetUser(ctx, payload.UserId)
+
+	res := convertToUserRes(user)
+
+	return res, nil
+}
