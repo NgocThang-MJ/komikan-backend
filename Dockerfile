@@ -12,5 +12,6 @@ COPY app.env .
 COPY db/migration ./db/migration
 
 ENV DATABASE_URL=postgres://root:secret@komikan-db:5432/komikan?sslmode=disable
+ENV ORIGIN_ALLOWED=https://komikan.org
 EXPOSE 8080
 CMD ["/app/main"]
