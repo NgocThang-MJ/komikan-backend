@@ -66,7 +66,7 @@ func runGrpcServer(config util.Config, query *db.Queries) {
 	pb.RegisterKomikanServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
-	listener, err := net.Listen("tcp", config.GRPCServerAddress)
+	listener, err := net.Listen("tcp", ":9090")
 	if err != nil {
 		log.Fatal("Failed to create listener server")
 	}
@@ -80,7 +80,7 @@ func runGrpcServer(config util.Config, query *db.Queries) {
 	// Create Gateway server
 	conn, err := grpc.DialContext(
 		context.Background(),
-		"0.0.0.0:9090",
+		":9090",
 		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
@@ -95,7 +95,7 @@ func runGrpcServer(config util.Config, query *db.Queries) {
 	}
 
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{config.OriginAllowed},
+		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	}).Handler(gwmux)
 
