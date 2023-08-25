@@ -95,7 +95,7 @@ func runGrpcServer(config util.Config, query *db.Queries) {
 	}
 
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{config.OriginAllowed},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	}).Handler(gwmux)
 
